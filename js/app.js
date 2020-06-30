@@ -1,14 +1,7 @@
 import checkConnectivity from './network.js';
+import '../css/app.css';
 
 window.addEventListener('load', async () => {
-    generateLink('https://fonts.googleapis.com/icon?family=Material+Icons&display=swap')
-    generateLink('./resources/css/materialize.min.css');
-    generateLink('./css/app.css');
-
-    const link = document.createElement('script');
-    link.src = './resources/js/materialize.min.js';
-    document.head.appendChild(link);
-
     checkConnectivity();
     
     document.addEventListener('connection-changed', async e => {
@@ -16,22 +9,13 @@ window.addEventListener('load', async () => {
         const lostConnectionIcon = document.getElementById('lostConnection');
 
         if (e.detail) {
-            if (navbar.className !== 'blue') {
-                navbar.setAttribute('class', 'blue')
-                lostConnectionIcon.style.visibility = 'hidden'
-            }
+            navbar.classList.remove('bg-gray-500')
+            navbar.classList.add('bg-teal-500')
+            lostConnectionIcon.style.visibility = 'hidden'
         } else {
-            if (navbar.className !== 'grey') {
-                navbar.setAttribute('class', 'grey')
-                lostConnectionIcon.style.visibility = 'visible'
-            }
+            navbar.classList.remove('bg-teal-500')
+            navbar.classList.add('bg-gray-500')
+            lostConnectionIcon.style.visibility = 'visible'
         }
     });
 });
-
-function generateLink(url) {
-    const link = document.createElement('link');
-    link.rel = 'stylesheet';
-    link.href = url;
-    document.head.appendChild(link);
-}
