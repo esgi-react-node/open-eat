@@ -5,7 +5,7 @@ let abortFallback = false;
 let counter = 0;
 let arrTimes = [];
 
-export default function checkConnectivity({ url = 'https://www.google.com/images/phd/px.gif', timeToCount = 3, threshold = 3000, interval = 10000 }) {
+export default function checkConnectivity(url = 'https://www.google.com/images/phd/px.gif', timeToCount = 3, threshold = 3000, interval = 5000) {
     reset();
 
     if (navigator.onLine) {

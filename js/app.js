@@ -9,19 +9,22 @@ window.addEventListener('load', async () => {
     link.src = './resources/js/materialize.min.js';
     document.head.appendChild(link);
 
-    checkConnectivity({
-        interval: 2000
-    });
+    checkConnectivity();
     
     document.addEventListener('connection-changed', async e => {
-        let root = document.documentElement;
-        
+        const navbar = document.getElementById('navbar');
+        const lostConnectionIcon = document.getElementById('lostConnection');
+
         if (e.detail) {
-            root.style.setProperty('--app-blue', '#007eef');
-            console.log('online')
+            if (navbar.className !== 'blue') {
+                navbar.setAttribute('class', 'blue')
+                lostConnectionIcon.style.visibility = 'hidden'
+            }
         } else {
-            root.style.setProperty('--app-blue', '#7D7D7D');
-            console.log('offline')
+            if (navbar.className !== 'grey') {
+                navbar.setAttribute('class', 'grey')
+                lostConnectionIcon.style.visibility = 'visible'
+            }
         }
     });
 });

@@ -14,6 +14,7 @@
 
     <!-- css -->
     <link rel="preload" href="./resources/css/materialize.min.css" as="style">
+    <link rel="preload" href="./css/app.css" as="style">
 
     <!-- js -->
     <script type="module" src="./js/app.js"></script>
@@ -27,10 +28,11 @@
 </head>
 <body>
     <section id="app">
-        <nav class="blue">
+        <nav id="navbar" class="blue">
             <div class="nav-wrapper">
                 <a href="./resources/icon-512x512.png" class="brand-logo black-text">Open eat</a>
                 <ul id="nav-mobile" class="right hide-on-med-and-down">
+                    <li id="lostConnection" style="visibility: hidden;"><span class="material-icons black-text">cloud_off</span></li>
                     <li><a href="/" class="black-text">Accueil</a></li>
                 </ul>
             </div>
