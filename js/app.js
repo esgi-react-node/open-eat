@@ -1,5 +1,7 @@
+import page from "page";
 import checkConnectivity from './network.js';
 import '../css/app.css';
+import {Renderer} from "../lib/dom.js";
 
 window.addEventListener('load', async () => {
     checkConnectivity();
@@ -18,4 +20,5 @@ window.addEventListener('load', async () => {
             lostConnectionIcon.style.visibility = 'visible'
         }
     });
+
 });
