@@ -1,4 +1,6 @@
+import page from "page";
 import checkConnectivity from './network.js';
+import {Renderer} from "../lib/dom.js";
 
 window.addEventListener('load', async () => {
     generateLink('https://fonts.googleapis.com/icon?family=Material+Icons&display=swap')
@@ -27,6 +29,7 @@ window.addEventListener('load', async () => {
             }
         }
     });
+
 });
 
 function generateLink(url) {
@@ -35,3 +38,25 @@ function generateLink(url) {
     link.href = url;
     document.head.appendChild(link);
 }
+
+const renderer = new Renderer(document.getElementById("root"));
+
+page("/", () => {
+    renderer.render(`
+        <div>
+            <h1>Home page</h1>
+            <a href="/signin">Signin page</a>
+        </div>
+    `);
+});
+
+page("/signin", () => {
+    renderer.render(`
+        <div>
+            <h1>Signin page</h1>
+            <a href="/">Home page</a>
+        </div>
+    `);
+});
+
+page();
