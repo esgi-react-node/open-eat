@@ -1,14 +1,12 @@
 export const login = async () => {
     await loadFirebaseAuth()
     var provider = new firebase.auth.GoogleAuthProvider();
+
     provider.setCustomParameters({
         prompt: 'select_account'
     });
+
     firebase.auth().signInWithPopup(provider).then(function(result) {
-        console.log(result.user);
-        console.log(result.user.getEmail());
-        console.log(result.user.getDisplayName());
-        console.log(result.user.getImageUrl());
         /**
          * user.getDisplayName()
          * user.getEmail()
@@ -17,6 +15,17 @@ export const login = async () => {
         document.getElementById('login').style.visibility = 'hidden';
         document.getElementById('logout').style.visibility = 'visible';
 
+        const picture = document.getElementById("picture");
+
+        if (picture && result && result.user && result.user.photoURL) {
+            picture.setAttribute("src", result.user.photoURL);
+        }
+
+        const name = document.getElementById("name");
+
+        if (picture && result && result.user && result.user.displayName) {
+            name.innerHTML = result.user.displayName;
+        }
     }).catch(function(error) {
         // ...
     });
