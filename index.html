@@ -15,6 +15,9 @@
 
     <title data-base="Open eat">Open eat</title>
     <meta name="description" content="Order your meal easily!">
+
+    <!-- Css for FirebaseUi -->
+    <link type="text/css" rel="stylesheet" href="https://cdn.firebase.com/libs/firebaseui/3.5.2/firebaseui.css" />
 </head>
 <body>
     <section id="app">
@@ -34,7 +37,29 @@
                 </div>
             </div>
           </nav>
-        <div id="root" class="container"></div>
+        <div id="root" class="container">
+            <button id="login">Login</button>
+            <button id="logout" style="visibility: hidden;">Logout</button>
+        </div>
     </section>
+    <!-- The core Firebase JS SDK is always required and must be listed first -->
+    <script src="https://www.gstatic.com/firebasejs/7.15.5/firebase-app.js"></script>
+
+    <script src="https://cdn.firebase.com/libs/firebaseui/3.5.2/firebaseui.js"></script>
+
+    <script>
+        // Your web app's Firebase configuration
+        var firebaseConfig = {
+            apiKey: "AIzaSyD8WIcdDrNRFjJGhmX3mwG8_D-4QwdNlzs",
+            authDomain: "openeat-a325a.firebaseapp.com",
+            databaseURL: "https://openeat-a325a.firebaseio.com",
+            projectId: "openeat-a325a",
+            storageBucket: "openeat-a325a.appspot.com",
+            messagingSenderId: "568497594623",
+            appId: "1:568497594623:web:ff62a6c9cd3cb6dcad6cca"
+        };
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+    </script>
 </body>
 </html>

@@ -2,6 +2,7 @@ import page from "page";
 import checkConnectivity from './network.js';
 import '../css/app.css';
 import {Renderer} from "../lib/dom.js";
+import { login, logout } from './sdkGoogle.js';
 
 window.addEventListener('load', async () => {
     checkConnectivity();
@@ -21,4 +22,13 @@ window.addEventListener('load', async () => {
         }
     });
 
+    const loginButton = document.getElementById('login');
+    loginButton.addEventListener('click', () => {
+        login();
+    });
+
+    const logoutButton = document.getElementById('logout');
+    logoutButton.addEventListener('click', () => {
+        logout();
+    });
 });
