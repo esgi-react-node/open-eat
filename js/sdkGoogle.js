@@ -7,24 +7,22 @@ export const login = async () => {
     });
 
     firebase.auth().signInWithPopup(provider).then(function(result) {
-        /**
-         * user.getDisplayName()
-         * user.getEmail()
-         * user.getImageUrl()
-         */
-        document.getElementById('login').style.visibility = 'hidden';
-        document.getElementById('logout').style.visibility = 'visible';
+        document.getElementById('login').classList.add('hidden');
+        document.getElementById('logout').classList.remove('hidden');
 
-        const picture = document.getElementById("picture");
+        const avatar = document.getElementById("avatar");
 
-        if (picture && result && result.user && result.user.photoURL) {
-            picture.setAttribute("src", result.user.photoURL);
+        if (avatar && result && result.user && result.user.photoURL) {
+            avatar.setAttribute("src", result.user.photoURL);
+            avatar.classList.add('rounded-full');
+            avatar.classList.remove('hidden');
         }
 
         const name = document.getElementById("name");
 
-        if (picture && result && result.user && result.user.displayName) {
+        if (avatar && result && result.user && result.user.displayName) {
             name.innerHTML = result.user.displayName;
+            name.classList.remove('hidden');
         }
     }).catch(function(error) {
         // ...
@@ -34,19 +32,22 @@ export const login = async () => {
 export const logout = async () => {
     await loadFirebaseAuth()
     firebase.auth().signOut().then(function() {
-        document.getElementById('login').style.visibility = 'visible';
-        document.getElementById('logout').style.visibility = 'hidden';
+        document.getElementById('login').classList.remove('hidden');
+        document.getElementById('logout').classList.add('hidden');
 
-        const picture = document.getElementById("picture");
+        const avatar = document.getElementById("avatar");
 
-        if (picture) {
-            picture.setAttribute("src", "./icon-192x192.png");
+        if (avatar) {
+            avatar.setAttribute("src", "./icon-192x192.png");
+            avatar.classList.remove('rounded-full');
+            avatar.classList.add('hidden');
         }
 
         const name = document.getElementById("name");
 
         if (name) {
-            name.innerHTML = "OpenEat";
+            name.innerHTML = "";
+            name.classList.add('hidden');
         }
     }).catch(function(error) {
         // An error happened.

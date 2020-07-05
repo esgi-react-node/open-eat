@@ -13,12 +13,12 @@ window.addEventListener('load', async () => {
 
         if (e.detail) {
             navbar.classList.remove('bg-gray-500')
-            navbar.classList.add('bg-teal-500')
-            lostConnectionIcon.style.visibility = 'hidden'
+            navbar.classList.add('bg-teal-500');
+            lostConnectionIcon.classList.add('hidden');
         } else {
             navbar.classList.remove('bg-teal-500')
             navbar.classList.add('bg-gray-500')
-            lostConnectionIcon.style.visibility = 'visible'
+            lostConnectionIcon.classList.remove('hidden');
         }
     });
 
