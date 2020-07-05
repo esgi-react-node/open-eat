@@ -36,6 +36,18 @@ export const logout = async () => {
     firebase.auth().signOut().then(function() {
         document.getElementById('login').style.visibility = 'visible';
         document.getElementById('logout').style.visibility = 'hidden';
+
+        const picture = document.getElementById("picture");
+
+        if (picture) {
+            picture.setAttribute("src", "./icon-192x192.png");
+        }
+
+        const name = document.getElementById("name");
+
+        if (name) {
+            name.innerHTML = "OpenEat";
+        }
     }).catch(function(error) {
         // An error happened.
     });
