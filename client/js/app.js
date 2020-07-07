@@ -24,7 +24,7 @@ window.addEventListener('load', async () => {
 
     checkConnectedUser();
 
-    fetchOrders();
+    await fetchOrders();
 
     const loginButton = document.getElementById('login');
     loginButton.addEventListener('click', () => {

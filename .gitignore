@@ -1,0 +1,13 @@
+/.cache
+/.yarn
+/node_modules
+/.node_repl_history
+/.yarnrc
+/client/.yarnrc
+/client/yarn-error.log
+/client/.config
+/client/.cache
+/firebase/.cache
+/firebase/.config
+/firebase/.firebaserc
+/firebase/.yarnrc

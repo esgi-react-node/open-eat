@@ -1,16 +1,20 @@
-.PHONY: start stop client firebase server
+.PHONY: start stop client functions install
 
 start:
-	docker-compose up -d
+	docker-compose up --detach
 
 stop:
-	docker-compose down
+	docker-compose down --remove-orphans --volumes --timeout 0
+
+restart: stop start
+
+install:
+	docker-compose exec firebase yarn install
+	docker-compose exec firebase yarn --cwd functions install
+	docker-compose exec client yarn install
 
 client:
 	docker-compose exec client yarn start
 
-firebase:
-	docker-compose exec client yarn firebase emulators:start --only functions
-
-server:
-	docker-compose exec server yarn start
+functions:
+	docker-compose exec firebase yarn --cwd functions serve

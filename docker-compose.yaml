@@ -1,25 +1,25 @@
 version: "3"
 
 services:
-    server:
-        image: node
-        user: node
-        working_dir: /home/node
-        tty: true
-        stdin_open: true
-        ports:
-            - 3000:3000
-        volumes:
-            - ./server:/home/node
-
     client:
-        image: node
+        image: node:14.0.0
         user: node
         working_dir: /home/node
         tty: true
         stdin_open: true
         ports:
-            - 8080:8080
-            - 5001:5001
+            - 0.0.0.0:8080:8080
+            - 0.0.0.0:5001:5001
         volumes:
             - ./client:/home/node
+
+    firebase:
+        image: node:14.0.0
+        user: node
+        working_dir: /home/node
+        tty: true
+        stdin_open: true
+        ports:
+            - 0.0.0.0:9005:9005
+        volumes:
+            - ./firebase:/home/node

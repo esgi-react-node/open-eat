@@ -3,9 +3,6 @@
   "version": "1.0.0",
   "description": "Order your meal easily!",
   "private": true,
-  "dependencies": {
-    "firebase-tools": "^8.4.3"
-  },
   "devDependencies": {
     "@babel/core": "^7.10.4",
     "@babel/polyfill": "^7.10.4",
