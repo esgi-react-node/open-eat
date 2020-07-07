@@ -1,7 +1,18 @@
 version: "3"
 
 services:
-    node:
+    server:
+        image: node
+        user: node
+        working_dir: /home/node
+        tty: true
+        stdin_open: true
+        ports:
+            - 3000:3000
+        volumes:
+            - ./server:/home/node
+
+    client:
         image: node
         user: node
         working_dir: /home/node
@@ -9,5 +20,6 @@ services:
         stdin_open: true
         ports:
             - 8080:8080
+            - 5001:5001
         volumes:
-            - .:/home/node
+            - ./client:/home/node

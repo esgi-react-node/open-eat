@@ -9,16 +9,16 @@ Cette application devra reprend l’ensemble des concept vue en cours afin de fo
 ## Fonctionnalité :
 
 - Firebase (Cloud function / realtime database / Cloud Firestore)
-- UI qui montre l'état de la connexion (online / Offline)
-- Authentification
+- UI qui montre l'état de la connexion (online / Offline) --- OK
+- Authentification --- OK
 - Passer une commande
 - Rechercher un établissement
 - Favoris
 - Notation (note sur 5)
 - Commentaires
-- Avatar utilisateur
+- Avatar utilisateur --- OK
 - Image (lazy loading)
-- View lazy loading
+- View lazy loading --- OK
 - Synchronisation (Online / offline)
 - Web push notification
 
