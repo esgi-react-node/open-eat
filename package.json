@@ -1,0 +1,5 @@
+{
+  "dependencies": {
+    "@babel/plugin-transform-react-jsx": "^7.10.4"
+  }
+}

@@ -27,5 +27,11 @@
   "scripts": {
     "build": "webpack",
     "start": "webpack-dev-server"
+  },
+  "dependencies": {
+    "@babel/plugin-transform-react-jsx": "^7.10.4",
+    "idb": "^5.0.4",
+    "preact": "^10.4.5",
+    "preact-router": "^3.2.1"
   }
 }

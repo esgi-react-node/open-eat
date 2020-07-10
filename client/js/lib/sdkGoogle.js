@@ -17,6 +17,7 @@ export const login = async () => {
     provider.setCustomParameters({
         prompt: 'select_account'
     });
+
     firebase.auth().signInWithPopup(provider).then(function(result) {
         changeStateApp('connected', result.user);
     }).catch(function(error) {
@@ -54,6 +55,8 @@ const changeStateApp = (state, user) => {
     if (state === 'connected') {
         document.getElementById('login').classList.add('hidden');
         document.getElementById('logout').classList.remove('hidden');
+
+        window.localStorage.setItem('userId', user.uid);
     
         const avatar = document.getElementById("avatar");
     
@@ -72,6 +75,8 @@ const changeStateApp = (state, user) => {
     } else if (state === 'disconnected') {
         document.getElementById('login').classList.remove('hidden');
         document.getElementById('logout').classList.add('hidden');
+
+        window.localStorage.removeItem('userId');
 
         const avatar = document.getElementById("avatar");
 

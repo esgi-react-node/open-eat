@@ -1,38 +1,39 @@
-import page from "page";
-import checkConnectivity from './network.js';
+'use-strict';
+
+import { h, render, Component } from 'preact';
+import { useState } from 'preact/hooks';
+import Router from 'preact-router';
 import '../css/app.css';
-import { checkConnectedUser, login, logout } from './sdkGoogle.js';
-import { fetchOrders } from './orders';
+import checkConnectivity from './lib/network.js';
+import { checkConnectedUser } from './lib/sdkGoogle.js';
+import { initFirebase } from "./lib/firebase";
+import { Header } from './components/Header';
+import { NewOrder } from './components/NewOrder';
+import { ShowOrders } from './components/ShowOrders';
+import { ShowRestaurants } from './components/ShowRestaurants';
+import { Restaurant } from './context/Restaurant';
 
-window.addEventListener('load', async () => {
-    checkConnectivity();
-    
-    document.addEventListener('connection-changed', async e => {
-        const navbar = document.getElementById('navbar');
-        const lostConnectionIcon = document.getElementById('lostConnection');
+initFirebase();
+checkConnectivity();
+checkConnectedUser();
 
-        if (e.detail) {
-            navbar.classList.remove('bg-gray-500')
-            navbar.classList.add('bg-teal-500');
-            lostConnectionIcon.classList.add('hidden');
-        } else {
-            navbar.classList.remove('bg-teal-500')
-            navbar.classList.add('bg-gray-500')
-            lostConnectionIcon.classList.remove('hidden');
-        }
-    });
+class App extends Component {
+    render() {
+        const [restaurantId, setRestaurantId] = useState(0);
 
-    checkConnectedUser();
+        return (
+            <div class="app">
+                <Header />
+                <Restaurant.Provider value={{restaurantId, setRestaurantId}}>
+                    <Router>
+                        <ShowRestaurants path="/restaurants" />
+                        <NewOrder path="/order" />
+                        <ShowOrders path="/orders" />
+                    </Router>
+                </Restaurant.Provider>
+            </div>
+        );
+    }
+}
 
-    await fetchOrders();
-
-    const loginButton = document.getElementById('login');
-    loginButton.addEventListener('click', () => {
-        login();
-    });
-
-    const logoutButton = document.getElementById('logout');
-    logoutButton.addEventListener('click', () => {
-        logout();
-    });
-});
+render(<App />, document.body);

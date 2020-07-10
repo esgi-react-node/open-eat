@@ -14,7 +14,7 @@ services:
             - ./client:/home/node
 
     firebase:
-        image: node:14.0.0
+        build: ./docker/firebase
         user: node
         working_dir: /home/node
         tty: true

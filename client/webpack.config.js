@@ -22,6 +22,12 @@ module.exports = {
     module: {
         rules: [
             {
+                test: /\.jsx?$/,
+                loader: "babel-loader"
+            }
+        ],
+        rules: [
+            {
                 test: /\.css$/,
                 use: [
                     MiniCssExtractPlugin.loader,
