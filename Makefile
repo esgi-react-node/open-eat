@@ -1,4 +1,4 @@
-.PHONY: start stop restart install client firebase
+.PHONY: start stop restart install client firebase prod
 
 start:
 	docker-compose up --detach
@@ -18,3 +18,6 @@ client:
 
 firebase:
 	docker-compose exec firebase yarn firebase emulators:start
+
+prod:
+	docker-compose exec client yarn prod
