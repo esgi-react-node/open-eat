@@ -11,7 +11,7 @@ let arrTimes = [];
 export default function checkConnectivity() {
     setCheckConnectivity();
     
-    document.addEventListener('connection-changed', async e => {
+    document.addEventListener('connection-changed', e => {
         const navbar = document.getElementById('navbar');
         const lostConnectionIcon = document.getElementById('lostConnection');
 
@@ -23,7 +23,7 @@ export default function checkConnectivity() {
             if (window.localStorage.getItem('connectionType') !== 'online') {
                 window.localStorage.setItem('connectionType', 'online')
 
-                await syncData();
+                syncData();
             }
 
         } else {

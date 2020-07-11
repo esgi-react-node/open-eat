@@ -61,7 +61,7 @@ export const logout = async () => {
 
 const loadFirebaseAuth = () => {
     return new Promise((resolve) => {
-        const url = "https://www.gstatic.com/firebasejs/7.15.5/firebase-auth.js";
+        const url = "https://cdnjs.cloudflare.com/ajax/libs/firebase/7.16.0/firebase-auth.min.js";
         const script = document.querySelector('[src="${url}"]');
 
         if (!script) {

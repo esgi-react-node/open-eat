@@ -11,9 +11,9 @@ export const ShowOrders = () => {
         });
     }, []);
 
-    const deleteOrder = async (orderId, orders, setOrders) => {
+    const deleteOrder = (orderId, orders, setOrders) => {
         setOrders(orders.filter(order => order.id !== order.id));
-        await deleteOrderApi(orderId);
+        deleteOrderApi(orderId);
     }
 
     return (

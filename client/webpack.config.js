@@ -54,7 +54,7 @@ module.exports = ({NODE_ENV}) => ({
                                 }),
                                 autoprefixer(),
                                 NODE_ENV === "production" && cssnano()
-                            ],
+                            ].filter(Boolean),
                         },
                         
                     },
