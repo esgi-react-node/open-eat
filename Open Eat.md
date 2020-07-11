@@ -12,8 +12,8 @@ Cette application devra reprend l’ensemble des concept vue en cours afin de fo
 - UI qui montre l'état de la connexion (online / Offline) --- OK
 - Authentification --- OK
 - Passer une commande --- OK
-- Rechercher un établissement
-- Favoris
+- Rechercher un établissement --- OK
+- Favoris --- OK
 - Notation (note sur 5)
 - Commentaires
 - Avatar utilisateur --- OK

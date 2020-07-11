@@ -6,7 +6,7 @@ export class Header extends Component {
         return (
             <nav id="navbar" class="flex items-center justify-between bg-teal-500 p-6 text-white">
                 <div class="flex items-center flex-shrink-0 mr-6">
-                    <img class="mr-4" width="48" height="48" src="./icon-192x192.png" />
+                    <img alt="logo" class="mr-4" width="48" height="48" src="./icon-192x192.png" />
                     <span class="font-semibold text-xl tracking-tight"><a href="/">Open eat</a></span>
                 </div>
                 <div class="w-full block flex-grow lg:flex lg:items-center lg:w-auto">
@@ -19,12 +19,12 @@ export class Header extends Component {
                         </a>
                     </div>
                     <div>
-                        <img id="lostConnection" class="hidden" src="./cloud_off-24px.svg"/>
                         <div class="flex items-center">
+                            <img alt="logoConnection" id="lostConnection" class="hidden mr-4" src="./cloud_off-24px.svg"/>
                             <button id="login" class="button" onClick={() => login()}>Login</button>
                             <button id="logout" class="button hidden mr-4" onClick={() => logout()}>Logout</button>
                             <span id="name" class="hidden"></span>
-                            <img id="avatar" class="hidden ml-4" width="48" height="48" src=""/>
+                            <img alt="avatar" id="avatar" class="hidden ml-4" width="48" height="48" src=""/>
                         </div>
                     </div>
                 </div>

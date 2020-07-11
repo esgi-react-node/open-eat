@@ -1,65 +1,41 @@
 import { fetchApi } from './api';
-import { initDb } from '../lib/db.js';
+import { idbOrders } from '../lib/idb.js';
 
 export const syncOrder = async (order) => {
     order.isSync = 'true';
     
-    const foundOrder = await fetchApi(`?id=${order.id}`);
+    const foundOrder = await fetchApi(`orders?id=${order.id}`);
 
     if (foundOrder.id) {
-        await fetchApi(`/${foundOrder.docId}`, 'PUT', order);
+        await fetchApi(`orders/${foundOrder.docId}`, 'PUT', order);
     } else {
-        await fetchApi('', 'POST', order);
+        await fetchApi('orders', 'POST', order);
     }
 }
-
-export const fetchOrders = async () => {
-    try {
-        const response = await fetchApi('/');
-
-        if (!response) {
-            throw new Error("Unable to reach the Firebase Cloud Functions server");
-        }
-
-        return await response.json();
-    } catch (error) {
-        console.error(error.message);
-    }
-};
 
 export const fetchOrdersByUser = async () => {
     try {
         const userId = window.localStorage.getItem('userId');
+        let response = [];
 
         if (!userId) {
-            return [];
+            return response;
         }
 
-        const response = await fetchApi(`?user=${userId}`);
+        if (window.localStorage.getItem('connectionType') === 'online') {
+            response = await fetchApi(`orders?user=${userId}`);
 
-        if (!response) {
-            throw new Error("Unable to reach the Firebase Cloud Functions server");
+            if (!response) {
+                throw new Error("Unable to reach the Firebase Cloud Functions server");
+            }
+        } else {
+            const db = await idbOrders();
+            const orders = await db.getAllFromIndex('orders', 'user', userId);
+    
+            response = orders;
         }
 
         return response;
-    } catch (error) {
-        console.error(error.message);
-    }
-};
-
-export const fetchOrder = async (orderId) => {
-    try {
-        if (!orderId) {
-            return {};
-        }
-
-        const response = await fetchApi(`/${orderId}`);
-
-        if (!response) {
-            throw new Error("Unable to reach the Firebase Cloud Functions server");
-        }
-
-        return await response.json();
     } catch (error) {
         console.error(error.message);
     }
@@ -72,21 +48,13 @@ export const addOrder = async (order) => {
     order.isSync = connectionType === 'online' ? 'true' : 'false';
 
     try {
-        const db = await initDb();
+        const db = await idbOrders();
 
         await db.add('orders', order);
 
         if (connectionType === 'online') {
-            await fetchApi('', 'POST', order);
+            await fetchApi('orders', 'POST', order);
         }
-    } catch (error) {
-        console.error(error.message);
-    }
-};
-
-export const updateOrder = async (order) => {
-    try {
-        await fetchApi(`/${order.id}`, 'PUT', order);
     } catch (error) {
         console.error(error.message);
     }
@@ -96,10 +64,10 @@ export const deleteOrder = async (orderId) => {
     const connectionType = window.localStorage.getItem('connectionType');
     
     try {
-        const db = await initDb();
+        const db = await idbOrders();
 
         if (connectionType === 'online') {
-            await fetchApi(`/${orderId}`, 'DELETE');
+            await fetchApi(`orders/${orderId}`, 'DELETE');
 
             db.transaction("orders", "readwrite").objectStore("orders").delete(orderId);
         } else {

@@ -7,8 +7,8 @@ import { BackButton } from './BackButton';
 
 export const NewOrder = () => {
     const [cart, setCart] = useState({products: [], total: 0});
-    const {restaurantId} = useContext(Restaurant);
-    const products = getProducts(restaurantId)
+    const {restaurant} = useContext(Restaurant);
+    const products = getProducts(restaurant.id)
 
     if (!products) {
         return (

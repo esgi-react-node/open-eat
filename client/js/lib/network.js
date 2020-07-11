@@ -1,5 +1,5 @@
-import { initDb } from './db.js';
-import { syncOrder } from '../api/orders';
+import { idbOrders } from './idb.js';
+import { syncOrder, deleteOrder } from '../api/orders';
 
 const image = new Image();
 let tStart = null;
@@ -39,7 +39,9 @@ export default function checkConnectivity() {
 }
 
 async function syncData() {
-    const db = await initDb();
+    const db = await idbOrders();
+
+    // Update orders
     const orders = await db.getAllFromIndex('orders', 'isSync', 'false');
     const ordersId = [];
 
@@ -57,6 +59,15 @@ async function syncData() {
     })
 
     tx.done;
+
+    // Delete orders
+    orders = await db.getAllFromIndex('orders', 'removed', 'true');
+    ordersId = [];
+
+    orders.forEach(async ({id}) => {
+        await deleteOrder(id);
+        db.transaction("orders", "readwrite").objectStore("orders").delete(id);
+    });
 }
 
 function setCheckConnectivity(url = 'https://www.google.com/images/phd/px.gif', timeToCount = 3, threshold = 3000, interval = 2000) {

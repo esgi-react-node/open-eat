@@ -18,12 +18,13 @@ const firebaseConfig = {
 
 firebase.initializeApp(firebaseConfig);
 
-const application = express();
+const app = express();
 const firestore = firebase.firestore();
 
-application.use(cors({origin: true}));
+app.use(cors({origin: true}));
 
-application.get('', async (request, response) => {
+// --- Orders ---
+app.get('/orders', async (request, response) => {
     let data = [];
 
     if (request.query.user) {
@@ -41,25 +42,14 @@ application.get('', async (request, response) => {
     response.json(orders);
 });
 
-application.get('/:id', async (request, response) => {
-    const order = await firestore.collection('orders').where('id', '==', parseInt(request.params.id)).get();
-    response.json(order.data());
-});
-
-application.post('', async (request, response) => {
+app.post('/orders', async (request, response) => {
     await firestore.collection('orders').add(request.body).then(async docRef => {
         const order = await firestore.collection('orders').doc(docRef.id).get();
-        response.send(order.data());
+        response.json(order.data());
     });
 });
 
-application.put('/:id', async (request, response) => {
-    await firestore.collection('orders').where('id', '==', parseInt(request.params.id)).set(request.body);
-    const order = await firestore.collection('orders').where('id', '==', parseInt(request.params.id)).get();
-    response.send(order.data());
-});
-
-application.delete('/:id', async (request, response) => {
+app.delete('/orders/:id', async (request, response) => {
     const snapshot = await firestore.collection('orders').where('id', '==', parseInt(request.params.id)).get();
     if (snapshot.empty) {
         console.log('No matching documents.');
@@ -70,7 +60,37 @@ application.delete('/:id', async (request, response) => {
         await firestore.collection('orders').doc(doc.id).delete();
     });
 
-    response.send(null)
+    response.json(null)
 });
 
-exports.orders = functions.https.onRequest(application);
+// --- Users ---
+app.get('/users/:id', async (request, response) => {
+    const snapshot = await firestore.collection('users').where('id', '==', request.params.id).get();
+    snapshot.forEach(async doc => {
+        const user = await firestore.collection('users').doc(doc.id).get();
+        response.json(user.data());
+    });
+});
+
+app.post('/users', async (request, response) => {
+    await firestore.collection('users').add(request.body).then(async docRef => {
+        const user = await firestore.collection('users').doc(docRef.id).get();
+        response.json(user.data());
+    });
+});
+
+app.put('/users/:id', async (request, response) => {
+    const snapshot = await firestore.collection('users').where('id', '==', request.params.id).get();
+    if (snapshot.empty) {
+        console.log('No matching documents.');
+        return;
+    }
+
+    snapshot.forEach(async doc => {
+        await firestore.collection('users').doc(doc.id).update(request.body);
+        const user = await firestore.collection('users').doc(doc.id).get();
+        response.json(user.data());
+    });
+});
+
+exports.api = functions.https.onRequest(app);

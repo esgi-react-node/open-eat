@@ -9,7 +9,7 @@ export const ShowOrders = () => {
         fetchOrdersByUser().then(orders => {
             setOrders(orders);
         });
-    });
+    }, []);
 
     const deleteOrder = async (orderId, orders, setOrders) => {
         setOrders(orders.filter(order => order.id !== order.id));
@@ -29,7 +29,7 @@ export const ShowOrders = () => {
                     </tr>
                 </thead>
                 <tbody>
-                    {orders.map(order => (
+                    {orders.length > 0 && orders.map(order => (
                         <tr key={order.id}>
                             <td class="px-4 py-2 text-center">
                                 {order.order.map((product, index) => {

@@ -1,15 +1,22 @@
+import { addUser } from '../api/users';
+
 export const checkConnectedUser = async () => {
     await loadFirebaseAuth()
     firebase.auth().onAuthStateChanged(function(user) {
         if (user) {
-            changeStateApp('connected', user);
+            changeStateApp('online', user);
         } else {
-            changeStateApp('disconnected');
+            changeStateApp('offline');
         }
     });
 }
 
 export const login = async () => {
+    if (window.localStorage.getItem('connectionType') === 'offline') {
+        alert('Vous ne pouvez pas vous connecter en mode hors ligne.')
+        return;
+    }
+
     await loadFirebaseAuth()
     
     var provider = new firebase.auth.GoogleAuthProvider();
@@ -19,7 +26,9 @@ export const login = async () => {
     });
 
     firebase.auth().signInWithPopup(provider).then(function(result) {
-        changeStateApp('connected', result.user);
+        changeStateApp('online', result.user);
+
+        addUser(result.user);
     }).catch(function(error) {
         console.error('Error occured while creating the popup to signin', error.code, error.message);
     });
@@ -28,7 +37,7 @@ export const login = async () => {
 export const logout = async () => {
     await loadFirebaseAuth()
     firebase.auth().signOut().then(function() {
-        changeStateApp('disconnected');
+        changeStateApp('offline');
     }).catch(function(error) {
         console.error('Error occured while sign out user', error.code, error.message);
     });
@@ -52,7 +61,7 @@ const loadFirebaseAuth = () => {
 };
 
 const changeStateApp = (state, user) => {
-    if (state === 'connected') {
+    if (state === 'online') {
         document.getElementById('login').classList.add('hidden');
         document.getElementById('logout').classList.remove('hidden');
 
@@ -72,7 +81,7 @@ const changeStateApp = (state, user) => {
             name.innerHTML = user.displayName;
             name.classList.remove('hidden');
         }
-    } else if (state === 'disconnected') {
+    } else if (state === 'offline') {
         document.getElementById('login').classList.remove('hidden');
         document.getElementById('logout').classList.add('hidden');
 

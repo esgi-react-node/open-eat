@@ -3,34 +3,34 @@ const products = {
         {
             "id": 1,
             "name": "Pizza 4 fromages",
-            "price": 2
+            "price": 12.50
         },
         {
             "id": 2,
             "name": "Pizza Raclette",
-            "price": 7
+            "price": 13
         },
         {
             "id": 3,
             "name": "Pizza Savoyarde",
-            "price": 4
+            "price": 13.50
         }
     ],
     2: [
         {
             "id": 4,
             "name": "Pâtes bolognaise",
-            "price": 2
+            "price": 8
         },
         {
             "id": 5,
             "name": "Pâtes Carbonara",
-            "price": 7
+            "price": 9.50
         },
         {
             "id": 6,
             "name": "Pâtes au pesto ",
-            "price": 4
+            "price": 7
         }
     ]
 }
