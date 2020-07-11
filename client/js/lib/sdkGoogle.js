@@ -1,4 +1,7 @@
 import { addUser } from '../api/users';
+import { User } from '../context/User';
+import { useContext } from 'preact/hooks';
+import { fetchApi } from '../api/api';
 
 export const checkConnectedUser = async () => {
     await loadFirebaseAuth()
@@ -25,10 +28,18 @@ export const login = async () => {
         prompt: 'select_account'
     });
 
-    firebase.auth().signInWithPopup(provider).then(function(result) {
+    firebase.auth().signInWithPopup(provider).then(async function(result) {
         changeStateApp('online', result.user);
 
-        addUser(result.user);
+        const {setUser} = useContext(User);
+
+        const maybeUser = await fetchApi(`/users/${result.user.uid}`);
+
+        if (maybeUser) {
+            setUser({id: maybeUser.uid, name: maybeUser.displayName, favorites: maybeUser.favorites});
+        } else {
+            addUser(result.user);
+        }
     }).catch(function(error) {
         console.error('Error occured while creating the popup to signin', error.code, error.message);
     });
@@ -36,10 +47,15 @@ export const login = async () => {
 
 export const logout = async () => {
     await loadFirebaseAuth()
+
     firebase.auth().signOut().then(function() {
         changeStateApp('offline');
     }).catch(function(error) {
         console.error('Error occured while sign out user', error.code, error.message);
+    }).finally(() => {
+        const {setUser} = useContext(User);
+
+        setUser({});
     });
 }
 

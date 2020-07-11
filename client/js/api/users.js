@@ -1,5 +1,7 @@
 import { fetchApi } from './api';
 import { idbUsers } from '../lib/idb.js';
+import { User } from '../context/User';
+import { useContext } from 'preact/hooks';
 
 export const getUser = async () => {
     try {
@@ -30,21 +32,24 @@ export const getUser = async () => {
 
 export const addUser = async ({uid, displayName}) => {
     const connectionType = window.localStorage.getItem('connectionType');
-    const user = {id: uid, name: displayName, favorites: []}
+    const user = {id: uid, name: displayName, favorites: []};
+    const {setUser} = useContext(User);
 
     user.isSync = connectionType === 'online' ? 'true' : 'false';
 
     try {
         const db = await idbUsers();
         const users = await db.getAllFromIndex('users', 'id', uid);
-        
-        if (!users) {
+
+        if (users.length === 0) {
             await db.add('users', user);
     
             if (connectionType === 'online') {
                 await fetchApi('users', 'POST', user);
             }
         }
+
+        setUser(user);
     } catch (error) {
         console.error(error.message);
     }

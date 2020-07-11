@@ -1,20 +1,15 @@
 import { h } from 'preact';
 import { restaurants as initialRestaurants } from '../data/restaurants';
-import { useContext, useState, useEffect } from 'preact/hooks';
+import { useContext, useState } from 'preact/hooks';
 import { Restaurant } from '../context/Restaurant';
 import { route } from 'preact-router';
 import { getUser, updateUser } from '../api/users';
+import { User } from '../context/User';
 
 export const ShowRestaurants = () => {
     const { setRestaurant } = useContext(Restaurant);
     const [restaurants, setRestaurants] = useState(initialRestaurants);
-    const [user, setUser] = useState({});
-
-    useEffect(() => {
-        getUser().then(user => {
-            setUser(user);
-        });
-    }, []);
+    const {user, setUser} = useContext(User);
 
     const loadOrderRestaurant = restaurant => {
         setRestaurant(restaurant);
@@ -97,7 +92,7 @@ export const ShowRestaurants = () => {
                             </div>
                         </div>
 
-                        {user && (
+                        {Object.prototype.hasOwnProperty.call(user, "id") && (
                             <div class="px-6 text-sm font-semibold text-gray-700">
                                 {user && user.favorites && user.favorites.includes(restaurant.id) ? (
                                     <span class="material-icons text-red-700 cursor-pointer rounded-full hover:shadow-inner" onClick={() => updateFavorite(restaurant.id, user, setUser)}>favorite</span>

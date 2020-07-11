@@ -14,6 +14,7 @@ import { ShowRestaurants } from './components/ShowRestaurants';
 import { ShowComments } from './components/ShowComments';
 import { AddComment } from './components/AddComment';
 import { Restaurant } from './context/Restaurant';
+import { User } from './context/User';
 
 initFirebase();
 checkConnectivity();
@@ -22,19 +23,22 @@ checkConnectedUser();
 class App extends Component {
     render() {
         const [restaurant, setRestaurant] = useState({});
+        const [user, setUser] = useState({});
 
         return (
             <div class="app">
                 <Header />
-                <Restaurant.Provider value={{restaurant, setRestaurant}}>
-                    <Router>
-                        <ShowRestaurants path="/restaurants" />
-                        <NewOrder path="/order" />
-                        <ShowOrders path="/orders" />
-                        <ShowComments path="/comments" />
-                        <AddComment path="/comment" />
-                    </Router>
-                </Restaurant.Provider>
+                <User.Provider value={{user, setUser}}>
+                    <Restaurant.Provider value={{restaurant, setRestaurant}}>
+                        <Router>
+                            <ShowRestaurants path="/restaurants" />
+                            <NewOrder path="/order" />
+                            <ShowOrders path="/orders" />
+                            <ShowComments path="/comments" />
+                            <AddComment path="/comment" />
+                        </Router>
+                    </Restaurant.Provider>
+                </User.Provider>
             </div>
         );
     }
