@@ -25,11 +25,12 @@
     "webpack-dev-server": "^3.11.0"
   },
   "scripts": {
-    "build": "webpack",
-    "start": "webpack-dev-server"
+    "prod": "webpack --env.NODE_ENV=production -p",
+    "start": "webpack-dev-server --env.NODE_ENV=development"
   },
   "dependencies": {
     "@babel/plugin-transform-react-jsx": "^7.10.4",
+    "cssnano": "^4.1.10",
     "idb": "^5.0.4",
     "preact": "^10.4.5",
     "preact-router": "^3.2.1"
