@@ -7,7 +7,7 @@ export class Header extends Component {
             <nav id="navbar" class="flex items-center justify-between bg-teal-500 p-6 text-white">
                 <div class="flex items-center flex-shrink-0 mr-6">
                     <img alt="logo" class="mr-4" width="48" height="48" src="./icon-192x192.png" />
-                    <span class="font-semibold text-xl tracking-tight"><a href="/">Open eat</a></span>
+                    <h1 class="font-semibold text-xl tracking-tight"><a href="/">Open eat</a></h1>
                 </div>
                 <div class="w-full block flex-grow lg:flex lg:items-center lg:w-auto">
                     <div class="text-sm lg:flex-grow">
