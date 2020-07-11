@@ -23,3 +23,10 @@ services:
             - 0.0.0.0:9005:9005
         volumes:
             - ./firebase:/home/node
+
+    nginx:
+        image: nginx:1.19.1
+        ports:
+            - 8081:80
+        volumes:
+            - ./client/build:/usr/share/nginx/html
