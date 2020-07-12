@@ -10,7 +10,6 @@ export const idbOrders = async () => {
             store.createIndex('id', 'id');
             store.createIndex('user', 'user');
             store.createIndex('isSync', 'isSync');
-            store.createIndex('removed', 'removed');
         }
     });
 }
@@ -19,6 +18,19 @@ export const idbUsers = async () => {
     return openDB('users', 1, {
         upgrade(db) {
             const store = db.createObjectStore('users', {
+                keyPath: 'id',
+            });
+
+            store.createIndex('id', 'id');
+            store.createIndex('isSync', 'isSync');
+        }
+    });
+}
+
+export const idbRestaurants = async () => {
+    return openDB('restaurants', 1, {
+        upgrade(db) {
+            const store = db.createObjectStore('restaurants', {
                 keyPath: 'id',
             });
 

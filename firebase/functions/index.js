@@ -1,9 +1,10 @@
 "use strict";
 
-const express = require("express");
-const cors = require("cors");
-const firebase = require("firebase");
-const functions = require("firebase-functions");
+const firebase = require('firebase');
+const functions = require('firebase-functions');
+const admin = require('firebase-admin');
+const express = require('express');
+const cors = require('cors');
 
 const firebaseConfig = {
     apiKey: "AIzaSyD8WIcdDrNRFjJGhmX3mwG8_D-4QwdNlzs",
@@ -17,6 +18,14 @@ const firebaseConfig = {
 };
 
 firebase.initializeApp(firebaseConfig);
+
+const serviceAccount = require("./adminsdk_key.json");
+const fcmToken = 'BA1kWXUhkHPV0Drrbn5YdDHet3gPh0G-UsMCQp-JfxTqfq9X3uhNE1B3CBL2Ev4FAeeiWuzhz4KCi3PWI--xZj8';
+
+admin.initializeApp({
+    credential: admin.credential.cert(serviceAccount),
+    databaseURL: "https://openeat-a325a.firebaseio.com"
+});
 
 const app = express();
 const firestore = firebase.firestore();
@@ -66,6 +75,11 @@ app.delete('/orders/:id', async (request, response) => {
 // --- Users ---
 app.get('/users/:id', async (request, response) => {
     const snapshot = await firestore.collection('users').where('id', '==', request.params.id).get();
+    
+    if (snapshot.empty) {
+        response.json({});
+    }
+
     snapshot.forEach(async doc => {
         const user = await firestore.collection('users').doc(doc.id).get();
         response.json(user.data());
@@ -90,6 +104,32 @@ app.put('/users/:id', async (request, response) => {
         await firestore.collection('users').doc(doc.id).update(request.body);
         const user = await firestore.collection('users').doc(doc.id).get();
         response.json(user.data());
+    });
+});
+
+// --- Restaurants
+app.get('/restaurants', async (request, response) => {
+    const snapshot = await firestore.collection('restaurants').get();
+    let restaurants = [];
+
+    snapshot.forEach(async doc => {
+        restaurants.push(doc.data());
+    });
+
+    response.json(restaurants);
+});
+
+app.put('/restaurants/:id', async (request, response) => {
+    const snapshot = await firestore.collection('restaurants').where('id', '==', parseInt(request.params.id)).get();
+    if (snapshot.empty) {
+        console.log('No matching documents.');
+        return;
+    }
+
+    snapshot.forEach(async doc => {
+        await firestore.collection('restaurants').doc(doc.id).update(request.body);
+        const restaurant = await firestore.collection('restaurants').doc(doc.id).get();
+        response.json(restaurant.data());
     });
 });
 

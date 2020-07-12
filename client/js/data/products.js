@@ -29,7 +29,7 @@ const products = {
         },
         {
             "id": 6,
-            "name": "Pâtes au pesto ",
+            "name": "Pâtes au pesto",
             "price": 7
         }
     ]

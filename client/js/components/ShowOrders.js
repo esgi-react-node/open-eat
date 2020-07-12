@@ -1,6 +1,7 @@
 import { h } from 'preact';
 import { useState, useEffect } from 'preact/hooks';
-import { fetchOrdersByUser, deleteOrder as deleteOrderApi } from '../api/orders';
+import { fetchOrdersByUser } from '../api/orders';
+import { BackButton } from './BackButton';
 
 export const ShowOrders = () => {
     const [orders, setOrders] = useState([]);
@@ -11,11 +12,6 @@ export const ShowOrders = () => {
         });
     }, []);
 
-    const deleteOrder = (orderId, orders, setOrders) => {
-        setOrders(orders.filter(order => order.id !== order.id));
-        deleteOrderApi(orderId);
-    }
-
     return (
         <div class="container  mx-auto mt-4">
             <h1 class="text-xl">Vos commandes</h1>
@@ -25,7 +21,6 @@ export const ShowOrders = () => {
                     <tr>
                         <th class="px-4 py-2">Commande</th>
                         <th class="px-4 py-2">Total</th>
-                        <th class="px-4 py-2">Actions</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -45,13 +40,11 @@ export const ShowOrders = () => {
                                 })}
                             </td>
                             <td class="px-4 py-2 text-center">{order.total} €</td>
-                            <td class="px-4 py-2 text-center">
-                            <span class="material-icons text-red-700 cursor-pointer" onClick={() => deleteOrder(order.id, orders, setOrders)}>delete_outline</span>
-                            </td>
                         </tr>
                     ))}
                 </tbody>
             </table>
+            <BackButton />
         </div>
     )
 }

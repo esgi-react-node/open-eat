@@ -1,7 +1,7 @@
 export const fetchApi = (url, urlMethod = 'GET', urlBody = {}) => {
-    console.group("DEBUG NODE_ENV");
-    console.log(JSON.stringify(process.env.NODE_ENV));
-    console.groupEnd();
+    const fromCloudFunction = process.env.NODE_ENV === "production"
+    ? `https://us-central1-openeat-a325a.cloudfunctions.net/api/${url}`
+    : `http://0.0.0.0:9005/openeat-a325a/us-central1/api/${url}`;
 
     let options = {
         method: urlMethod,
@@ -14,7 +14,7 @@ export const fetchApi = (url, urlMethod = 'GET', urlBody = {}) => {
         options.body = JSON.stringify(urlBody);
     }
 
-    return fetch(fromCloundFunction, options)
+    return fetch(fromCloudFunction, options)
         .then(response => response.json())
         .then(response => response)
         .catch(error => console.error(error));

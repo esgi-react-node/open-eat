@@ -14,8 +14,8 @@ Cette application devra reprend l’ensemble des concept vue en cours afin de fo
 - Passer une commande --- OK
 - Rechercher un établissement --- OK
 - Favoris --- OK
-- Notation (note sur 5)
-- Commentaires
+- Notation (note sur 5) --- OK
+- Commentaires --- OK
 - Avatar utilisateur --- OK
 - Image (lazy loading)
 - View lazy loading --- OK

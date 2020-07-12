@@ -1,15 +1,25 @@
 import { h } from 'preact';
-import { restaurants as initialRestaurants } from '../data/restaurants';
-import { useContext, useState } from 'preact/hooks';
+import { useContext, useState, useEffect } from 'preact/hooks';
 import { Restaurant } from '../context/Restaurant';
 import { route } from 'preact-router';
 import { getUser, updateUser } from '../api/users';
+import { getRestaurants } from '../api/restaurants';
 import { User } from '../context/User';
 
 export const ShowRestaurants = () => {
     const { setRestaurant } = useContext(Restaurant);
-    const [restaurants, setRestaurants] = useState(initialRestaurants);
+    const [restaurants, setRestaurants] = useState([]);
+    const [initialRestaurants, setInitialRestaurants] = useState([]);
     const {user, setUser} = useContext(User);
+
+    useEffect(async () => {
+        if (!user.hasOwnProperty('id')) {
+            setUser(await getUser());
+        }
+        const restaurants = await getRestaurants();
+        setInitialRestaurants(restaurants);
+        setRestaurants(restaurants);
+    }, [])
 
     const loadOrderRestaurant = restaurant => {
         setRestaurant(restaurant);
@@ -55,13 +65,24 @@ export const ShowRestaurants = () => {
         if (event.currentTarget.value === '') {
             setRestaurants(initialRestaurants);
         } else {
-            const newListRestaurants = initialRestaurants.filter(restaurant => restaurant.name.match(event.currentTarget.value))
+            const newListRestaurants = initialRestaurants.filter(restaurant => restaurant.name.toLowerCase().match(event.currentTarget.value.toLowerCase()))
             setRestaurants(newListRestaurants);
         }
     }
 
+    const calcGradeRestaurant = restaurantComments => {
+        let grade = 0;
+        let nbComments = restaurantComments.length;
+
+        restaurantComments.forEach(comment => {
+            grade += comment.grade;
+        })
+
+        return Math.round(grade / nbComments * 10) / 10;
+    }
+
     return (
-        <div class="container  mx-auto mt-4">
+        <div class="container  mx-auto mt-4 mb-8">
             <h1 class="text-xl">Nos restaurants</h1>
 
             <div class="w-full max-w-xs mt-4 mb-4">
@@ -99,8 +120,13 @@ export const ShowRestaurants = () => {
                                 ) : (
                                     <span class="material-icons text-red-700 cursor-pointer rounded-full hover:shadow-inner" onClick={() => updateFavorite(restaurant.id, user, setUser)}>favorite_border</span>
                                 )}
-                                <span class="material-icons text-blue-700 cursor-pointer rounded-full hover:shadow-inner" onClick={() => showComments(restaurant.id)}>subject</span>
-                                <span class="material-icons text-green-700 cursor-pointer rounded-full hover:shadow-inner" onClick={() => addComment(restaurant.id)}>create</span>
+                                <span class="material-icons text-blue-700 cursor-pointer rounded-full hover:shadow-inner" onClick={() => showComments(restaurant)}>subject</span>
+                                <span class="material-icons text-green-700 cursor-pointer rounded-full hover:shadow-inner" onClick={() => addComment(restaurant)}>create</span>
+                                {restaurant.comments.length > 0 ? (
+                                    <span>Note: {calcGradeRestaurant(restaurant.comments)}/5</span>
+                                ) : (
+                                    <span>Ce restaurant n'a pas encore été noté.</span>
+                                )}
                             </div>
                         )}
                     </div>

@@ -74,6 +74,7 @@ module.exports = ({NODE_ENV}) => ({
         host: '0.0.0.0',
         port: 8080,
         historyApiFallback: true,
-        contentBase: './build'
+        contentBase: './build',
+        writeToDisk: true
     }
 });

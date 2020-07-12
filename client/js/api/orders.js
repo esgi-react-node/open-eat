@@ -1,18 +1,6 @@
 import { fetchApi } from './api';
 import { idbOrders } from '../lib/idb.js';
 
-export const syncOrder = async (order) => {
-    order.isSync = 'true';
-    
-    const foundOrder = await fetchApi(`orders?id=${order.id}`);
-
-    if (foundOrder.id) {
-        await fetchApi(`orders/${foundOrder.docId}`, 'PUT', order);
-    } else {
-        await fetchApi('orders', 'POST', order);
-    }
-}
-
 export const fetchOrdersByUser = async () => {
     try {
         const userId = window.localStorage.getItem('userId');
@@ -60,32 +48,24 @@ export const addOrder = async (order) => {
     }
 };
 
-export const deleteOrder = async (orderId) => {
-    const connectionType = window.localStorage.getItem('connectionType');
-    
-    try {
-        const db = await idbOrders();
+export const syncOrders = async () => {
+    const db = await idbOrders();
+    const foundOrders = await db.getAllFromIndex('orders', 'isSync', 'false');
 
-        if (connectionType === 'online') {
-            await fetchApi(`orders/${orderId}`, 'DELETE');
+    foundOrders.forEach(async order => {
+        const foundOrder = await fetchApi(`orders?id=${order.id}`);
 
-            db.transaction("orders", "readwrite").objectStore("orders").delete(orderId);
+        if (foundOrder.id) {
+            await fetchApi(`orders/${foundOrder.docId}`, 'PUT', order);
         } else {
-            const orders = await db.getAllFromIndex('orders', 'id', orderId);
-    
-            const tx = db.transaction('orders', 'readwrite').objectStore('orders');
-    
-            orders.forEach(async ({id}) => {
-                const order = await tx.get(id);
-                order.isSync = 'false';
-                order.removed = 'true';
-                await tx.put(order);
-            });
-    
-            tx.done;
+            await fetchApi('orders', 'POST', order);
         }
 
-    } catch (error) {
-        console.error(error.message);
-    }
-};
+        const tx = db.transaction('orders', 'readwrite').objectStore('orders');
+        const idbOrder = await tx.get(order.id);
+        idbOrder.isSync = 'true';
+        await tx.put(idbOrder);
+        tx.done;
+    });
+
+}

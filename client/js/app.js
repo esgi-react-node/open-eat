@@ -3,7 +3,7 @@
 import "../css/app.css";
 
 import { h, render, Component } from 'preact';
-import { useState } from 'preact/hooks';
+import { useState, useEffect } from 'preact/hooks';
 import Router from 'preact-router';
 import checkConnectivity from './lib/network.js';
 import { checkConnectedUser } from './lib/sdkGoogle.js';
@@ -19,8 +19,17 @@ import { User } from './context/User';
 
 class App extends Component {
     render() {
-        const [restaurant, setRestaurant] = useState({});
-        const [user, setUser] = useState({});
+        const localStorage = window.localStorage;
+        const [restaurant, setRestaurant] = useState(JSON.parse(localStorage.getItem("restaurant")) ?? {});
+        const [user, setUser] = useState(JSON.parse(localStorage.getItem("user")) ?? {});
+
+        useEffect(() => {
+            localStorage.setItem("user", JSON.stringify(user));
+        }, [user]);
+
+        useEffect(() => {
+            localStorage.setItem("restaurant", JSON.stringify(restaurant));
+        }, [restaurant]);
 
         return (
             <div class="app">
@@ -71,11 +80,19 @@ window.addEventListener("load", () => {
     Promise.all([
         loadStylesheet("/main.css"),
         loadStylesheet("https://fonts.googleapis.com/icon?family=Material+Icons"),
-        loadScript("https://cdnjs.cloudflare.com/ajax/libs/firebase/7.16.0/firebase-app.min.js")
+        loadScript("https://cdnjs.cloudflare.com/ajax/libs/firebase/7.16.0/firebase-app.min.js"),
+        loadScript("https://cdnjs.cloudflare.com/ajax/libs/firebase/7.16.0/firebase-messaging.min.js")
     ]).then(() => {
         initFirebase();
         checkConnectivity();
         checkConnectedUser();
+        const messaging = firebase.messaging();
+        
+        messaging.usePublicVapidKey('BJm_XSJsa9sbKC66wDCtPe94o33JfybRW2rItryY35lFByueYcbN7WM9kKQOUjLQ4EDOb1SX7L0_Dqy3bT75Uu4');
+
+        messaging.onMessage((payload) => {
+            console.log('Message received. ', payload);
+        });
 
         render(<App />, document.body);
     });

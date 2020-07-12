@@ -6,7 +6,7 @@ import { useContext } from 'preact/hooks';
 export const getUser = async () => {
     try {
         const userId = window.localStorage.getItem('userId');
-        let response = [];
+        let response = {};
 
         if (!userId) {
             return response;
@@ -32,21 +32,17 @@ export const getUser = async () => {
 
 export const addUser = async ({uid, displayName}) => {
     const connectionType = window.localStorage.getItem('connectionType');
-    const user = {id: uid, name: displayName, favorites: []};
+    const user = {id: uid, name: displayName, favorites: [], isSync: connectionType === 'online' ? 'true' : 'false'};
     const {setUser} = useContext(User);
 
-    user.isSync = connectionType === 'online' ? 'true' : 'false';
-
+    
     try {
         const db = await idbUsers();
-        const users = await db.getAllFromIndex('users', 'id', uid);
 
-        if (users.length === 0) {
-            await db.add('users', user);
-    
-            if (connectionType === 'online') {
-                await fetchApi('users', 'POST', user);
-            }
+        await db.add('users', user);
+
+        if (connectionType === 'online') {
+            await fetchApi('users', 'POST', user);
         }
 
         setUser(user);
@@ -62,19 +58,29 @@ export const updateUser = async user => {
         }
 
         const db = await idbUsers();
-        const users = await db.getAllFromIndex('users', 'id', user.id);
-    
         const tx = db.transaction('users', 'readwrite').objectStore('users');
 
-        users.forEach(async ({id}) => {
-            const idbUser = await tx.get(id);
-            idbUser.favorites = user.favorites;
-            idbUser.isSync = 'false';
-            await tx.put(idbUser);
-        });
+        const idbUser = await tx.get(user.id);
+        idbUser.favorites = user.favorites;
+        idbUser.isSync = 'false';
+        await tx.put(idbUser);
 
         tx.done;
     } catch (error) {
         console.error(error.message);
     }
+}
+
+export const syncUsers = async () => {
+    const db = await idbUsers();
+    const foundUsers = await db.getAllFromIndex('users', 'isSync', 'false');
+    
+    foundUsers.forEach(async user => {
+        await fetchApi(`users/${user.id}`, 'PUT', user);
+        const tx = db.transaction('users', 'readwrite').objectStore('users');
+        const dbUser = await tx.get(user.id);
+        dbUser.isSync = 'true';
+        await tx.put(dbUser);
+        tx.done;
+    });
 }

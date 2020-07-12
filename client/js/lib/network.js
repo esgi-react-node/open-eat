@@ -1,5 +1,6 @@
-import { idbOrders } from './idb.js';
-import { syncOrder, deleteOrder } from '../api/orders';
+import { syncOrders } from '../api/orders';
+import { syncRestaurants } from '../api/restaurants';
+import { syncUsers } from '../api/users';
 
 const image = new Image();
 let tStart = null;
@@ -39,35 +40,9 @@ export default function checkConnectivity() {
 }
 
 async function syncData() {
-    const db = await idbOrders();
-
-    // Update orders
-    const orders = await db.getAllFromIndex('orders', 'isSync', 'false');
-    const ordersId = [];
-
-    orders.forEach(async order => {
-        ordersId.push(order.id);
-        await syncOrder(order);
-    });
-
-    const tx = db.transaction('orders', 'readwrite').objectStore('orders');
-
-    ordersId.forEach(async id => {
-        const order = await tx.get(id);
-        order.isSync = 'true';
-        await tx.put(order);
-    })
-
-    tx.done;
-
-    // Delete orders
-    orders = await db.getAllFromIndex('orders', 'removed', 'true');
-    ordersId = [];
-
-    orders.forEach(async ({id}) => {
-        await deleteOrder(id);
-        db.transaction("orders", "readwrite").objectStore("orders").delete(id);
-    });
+    syncOrders();
+    syncUsers();
+    syncRestaurants();
 }
 
 function setCheckConnectivity(url = 'https://www.google.com/images/phd/px.gif', timeToCount = 3, threshold = 3000, interval = 2000) {

@@ -2,6 +2,7 @@ import { addUser } from '../api/users';
 import { User } from '../context/User';
 import { useContext } from 'preact/hooks';
 import { fetchApi } from '../api/api';
+import { idbUsers } from '../lib/idb';
 
 export const checkConnectedUser = async () => {
     await loadFirebaseAuth()
@@ -20,7 +21,7 @@ export const login = async () => {
         return;
     }
 
-    await loadFirebaseAuth()
+    await loadFirebaseAuth();
     
     var provider = new firebase.auth.GoogleAuthProvider();
 
@@ -33,10 +34,21 @@ export const login = async () => {
 
         const {setUser} = useContext(User);
 
-        const maybeUser = await fetchApi(`/users/${result.user.uid}`);
+        const foundUser = await fetchApi(`users/${result.user.uid}`);
 
-        if (maybeUser) {
-            setUser({id: maybeUser.uid, name: maybeUser.displayName, favorites: maybeUser.favorites});
+        if (foundUser.id) {
+            const user = {id: foundUser.id, name: foundUser.name, favorites: foundUser.favorites};
+            const db = await idbUsers();
+            const tx = db.transaction('users', 'readwrite').objectStore('users');
+            const dbUser = await tx.get(user.id);
+
+            if (!dbUser) {
+                await db.add('users', user);
+            }
+            
+            tx.done;
+
+            setUser(user);
         } else {
             addUser(result.user);
         }

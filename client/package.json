@@ -27,7 +27,7 @@
   },
   "scripts": {
     "prod": "webpack --env.NODE_ENV=production -p",
-    "start": "webpack-dev-server --env.NODE_ENV=development"
+    "start": "webpack-dev-server --env.NODE_ENV=development --progress"
   },
   "dependencies": {
     "@babel/plugin-transform-react-jsx": "^7.10.4",
