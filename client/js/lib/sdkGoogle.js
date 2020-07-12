@@ -5,7 +5,7 @@ import { fetchApi } from '../api/api';
 
 export const checkConnectedUser = async () => {
     await loadFirebaseAuth()
-    firebase.auth().onAuthStateChanged(function(user) {
+    firebase.auth().onAuthStateChanged(user => {
         if (user) {
             changeStateApp('online', user);
         } else {
@@ -28,7 +28,7 @@ export const login = async () => {
         prompt: 'select_account'
     });
 
-    firebase.auth().signInWithPopup(provider).then(async function(result) {
+    firebase.auth().signInWithPopup(provider).then(async result => {
         changeStateApp('online', result.user);
 
         const {setUser} = useContext(User);
@@ -40,7 +40,7 @@ export const login = async () => {
         } else {
             addUser(result.user);
         }
-    }).catch(function(error) {
+    }).catch(error => {
         console.error('Error occured while creating the popup to signin', error.code, error.message);
     });
 }
@@ -48,9 +48,9 @@ export const login = async () => {
 export const logout = async () => {
     await loadFirebaseAuth()
 
-    firebase.auth().signOut().then(function() {
+    firebase.auth().signOut().then(() => {
         changeStateApp('offline');
-    }).catch(function(error) {
+    }).catch(error => {
         console.error('Error occured while sign out user', error.code, error.message);
     }).finally(() => {
         const {setUser} = useContext(User);
