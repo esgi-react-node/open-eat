@@ -1,5 +1,7 @@
 'use-strict';
 
+import "../css/app.css";
+
 import { h, render, Component } from 'preact';
 import { useState } from 'preact/hooks';
 import Router from 'preact-router';
