@@ -1,4 +1,8 @@
 export const fetchApi = (url, urlMethod = 'GET', urlBody = {}) => {
+    console.group("DEBUG NODE_ENV");
+    console.log(JSON.stringify(process.env.NODE_ENV));
+    console.groupEnd();
+
     let options = {
         method: urlMethod,
         headers: {
@@ -10,7 +14,8 @@ export const fetchApi = (url, urlMethod = 'GET', urlBody = {}) => {
         options.body = JSON.stringify(urlBody);
     }
 
-    return fetch(`http://0.0.0.0:9005/openeat-a325a/us-central1/api/${url}`, options).then(response => response.json())
-    .then(response => response)
-    .catch(error => console.error(error));
+    return fetch(fromCloundFunction, options)
+        .then(response => response.json())
+        .then(response => response)
+        .catch(error => console.error(error));
 }
