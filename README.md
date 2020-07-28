@@ -19,8 +19,8 @@ $ cd open-eat
 Command | Description
 ---|---
 `make start` | Start the Docker Compose services.
-`make install` | Start the Docker Compose services.
-`make functions` | Start the Firebase Cloud Functions emulator.
+`make install` | Install all the dependencies.
+`make firebase` | Start the Firebase Cloud Functions emulator.
 `make client` | Start the client application.
 `make restart` | Restart the Docker Compose services.
 `make stop` | Stop the Docker Compose services.
