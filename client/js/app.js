@@ -86,13 +86,6 @@ window.addEventListener("load", () => {
         initFirebase();
         checkConnectivity();
         checkConnectedUser();
-        const messaging = firebase.messaging();
-        
-        messaging.usePublicVapidKey('BJm_XSJsa9sbKC66wDCtPe94o33JfybRW2rItryY35lFByueYcbN7WM9kKQOUjLQ4EDOb1SX7L0_Dqy3bT75Uu4');
-
-        messaging.onMessage((payload) => {
-            console.log('Message received. ', payload);
-        });
 
         render(<App />, document.body);
     });
