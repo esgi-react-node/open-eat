@@ -12,6 +12,7 @@ services:
             - 0.0.0.0:5001:5001
         volumes:
             - ./client:/home/node
+        command: "yarn start"
 
     firebase:
         build: ./docker/firebase
@@ -23,6 +24,7 @@ services:
             - 0.0.0.0:9005:9005
         volumes:
             - ./firebase:/home/node
+        command: "yarn firebase emulators:start"
 
     nginx:
         image: nginx:1.19.1
